@@ -1,0 +1,10 @@
+apache_vhosts:
+  - name: nevin.com
+    servername: nevin.com
+    docroot: /var/www/nevin
+    index_content: "<h1>Welcome to nevin.com!</h1>"
+
+  - name: example.com
+    servername: example.com
+    docroot: /var/www/example
+    index_content: "<h1>Welcome to example.com!</h1>"

@@ -1,0 +1,4 @@
+- name: Deploy Apache with role-based layout and multiple vhosts
+  hosts: VM2
+  roles:
+    - role: apache

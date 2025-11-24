@@ -1,0 +1,6 @@
+# group_vars for webservers (example override)
+apache_vhosts:
+  - name: override.nevin.com
+    port: 80
+    docroot: /var/www/override.nevin.com
+    index_content: "<h1>Overridden vhost</h1>"

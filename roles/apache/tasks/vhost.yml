@@ -1,0 +1,35 @@
+---
+# Handles per-vhost setup
+
+- name: Ensure document root exists for {{ vhost.name }}
+  ansible.builtin.file:
+    path: "{{ vhost.docroot }}"
+    state: directory
+    owner: "{{ 'www-data' if ansible_facts['os_family'] == 'Debian' else 'apache' }}"
+    group: "{{ 'www-data' if ansible_facts['os_family'] == 'Debian' else 'apache' }}"
+    mode: '0755'
+
+- name: Deploy index.html for {{ vhost.name }}
+  ansible.builtin.copy:
+    dest: "{{ vhost.docroot }}/index.html"
+    content: "{{ vhost.index_content | default('<h1>{{ vhost.servername }} — Deployed by Ansible</h1>') }}"
+    owner: "{{ 'www-data' if ansible_facts['os_family'] == 'Debian' else 'apache' }}"
+    group: "{{ 'www-data' if ansible_facts['os_family'] == 'Debian' else 'apache' }}"
+    mode: '0644'
+
+- name: Deploy vhost configuration for {{ vhost.name }}
+  ansible.builtin.template:
+    src: "vhost.j2"
+    dest: "{{ apache_sites_available }}/{{ vhost.name }}.conf"
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart Apache
+
+- name: Enable site on Debian (a2ensite) for {{ vhost.name }}
+  ansible.builtin.command: "a2ensite {{ vhost.name }}.conf"
+  args:
+    creates: "/etc/apache2/sites-enabled/{{ vhost.name }}.conf"
+  when: ansible_facts['os_family'] == 'Debian'
+  notify: Restart Apache
+

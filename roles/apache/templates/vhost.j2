@@ -1,0 +1,15 @@
+<VirtualHost *:{{ vhost.port | default(80) }}>
+    ServerName {{ vhost.servername }}
+    DocumentRoot {{ vhost.docroot }}
+
+    ErrorLog {{ '/var/log/httpd/' if ansible_facts['os_family'] != 'Debian' else '/var/log/apache2/' }}{{ vhost.name }}_error.log
+    CustomLog {{ '/var/log/httpd/' if ansible_facts['os_family'] != 'Debian' else '/var/log/apache2/' }}{{ vhost.name }}_access.log combined
+
+    <Directory {{ vhost.docroot }}>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+
+

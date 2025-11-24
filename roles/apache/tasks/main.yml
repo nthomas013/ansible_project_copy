@@ -1,0 +1,26 @@
+---
+- name: Set OS-specific vars
+  set_fact:
+    apache_pkg: "{{ 'apache2' if ansible_facts['os_family'] == 'Debian' else 'httpd' }}"
+    apache_service: "{{ 'apache2' if ansible_facts['os_family'] == 'Debian' else 'httpd' }}"
+    apache_sites_available: "{{ '/etc/apache2/sites-available' if ansible_facts['os_family'] == 'Debian' else '/etc/httpd/conf.d' }}"
+    apache_listen_dir: "{{ '/etc/apache2' if ansible_facts['os_family'] == 'Debian' else '/etc/httpd' }}"
+
+- name: Install Apache package
+  ansible.builtin.package:
+    name: "{{ apache_pkg }}"
+    state: present
+
+- name: Ensure Apache service is enabled and running
+  ansible.builtin.service:
+    name: "{{ apache_service }}"
+    state: started
+    enabled: true
+
+- name: Include vhost creation tasks for each vhost
+  ansible.builtin.include_tasks: vhost.yml
+  loop: "{{ apache_vhosts }}"
+  loop_control:
+    loop_var: vhost
+    label: "{{ vhost.name }}"
+

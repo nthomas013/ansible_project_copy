@@ -1,0 +1,8 @@
+all:
+  hosts:
+    VM2:
+      ansible_host: 192.168.29.151
+      ansible_user: nthomas
+      ansible_become: yes
+      ansible_become_method: sudo
+      ansible_become_pass: Nevin@123 

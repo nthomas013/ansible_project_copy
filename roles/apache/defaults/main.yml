@@ -1,0 +1,14 @@
+---
+# List of virtual hosts to create. Each item:
+# name: server_name (used for ServerName and filename)
+# port: listen port
+# docroot: document root path
+apache_vhosts:
+  - name: nevin.com
+    port: 80
+    docroot: /var/www/example.com
+    index_content: "<h1>Welcome to My main website</h1>\n<p>Deployed by Ansible role 'apache'.</p>"
+  - name: test.nevin.com
+    port: 80
+    docroot: /var/www/test.nevin.com
+    index_content: "<h1>Welcome to My test subdomain</h1>\n<p>Deployed by Ansible role 'apache'.</p>"
